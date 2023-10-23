@@ -27,7 +27,7 @@ pub unsafe extern "C" fn copy_rust_message(dest_buf: *mut u8, dest_len: usize) -
     }
     let msg_len = dest_len - dest_slice.len();
     // terminate with a NUL byte
-    if dest_slice.write(b"\x00").is_err() {
+    if dest_slice.write_all(b"\x00").is_err() {
         // the buffer was not big enough
         return -1;
     }
@@ -82,13 +82,30 @@ mod tests {
     #[test]
     fn test_copy_from_rust() {
         let mut mut_bytes = [0u8; 128];
-        let result = unsafe { copy_rust_message(mut_bytes.as_mut_ptr(), mut_bytes.len()) };
-        assert!(result > 0);
-        assert_eq!(mut_bytes[result as usize], 0);
-        let s = std::str::from_utf8(&mut_bytes[0..result as usize]).unwrap();
+        // fill so we test nul termination
+        mut_bytes.fill(42);
+
+        let msg_len = unsafe { copy_rust_message(mut_bytes.as_mut_ptr(), mut_bytes.len()) };
+        assert!(msg_len > 0);
+        // must be nul terminated
+        assert_eq!(mut_bytes[msg_len as usize], 0);
+        let s = std::str::from_utf8(&mut_bytes[0..msg_len as usize]).unwrap();
         assert!(
             s.starts_with("Hello from Rust! OS="),
             "Did not start with correct message; s={s:#?}"
         );
+
+        // make the buffer too short for the nul terminator
+        mut_bytes.fill(42);
+        let result = unsafe { copy_rust_message(mut_bytes.as_mut_ptr(), msg_len as usize) };
+        assert_eq!(result, -1);
+        assert_eq!(mut_bytes[0], b'H');
+        assert_eq!(mut_bytes[msg_len as usize], 42);
+
+        // make the buffer too short for the main write
+        mut_bytes.fill(42);
+        let result = unsafe { copy_rust_message(mut_bytes.as_mut_ptr(), (msg_len - 1) as usize) };
+        assert_eq!(result, -1);
+        assert_eq!(mut_bytes[0], b'H');
     }
 }
