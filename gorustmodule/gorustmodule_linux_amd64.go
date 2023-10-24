@@ -4,5 +4,5 @@
 
 package gorustmodule
 
-// #cgo LDFLAGS: libexamplerustlib_linux_amd64.a
+// #cgo LDFLAGS: ${SRCDIR}/libexamplerustlib_linux_amd64.a
 import "C"

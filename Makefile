@@ -19,6 +19,10 @@ all: $(EXES) $(GOLIBS)
 		crustexe/crustexe.c
 	clang-format -i crustexe/crustexe.c
 
+	go test ./gorustexe ./gorustmodule
+	staticcheck --checks=all ./gorustexe ./gorustmodule
+	goimports -w ./gorustexe ./gorustmodule
+
 crustexe/crustexe: crustexe/crustexe.c $(RUSTLIB)
 
 $(RUSTLIB): examplerustlib/src/*

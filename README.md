@@ -13,3 +13,11 @@ This should build using `make` on Linux and Mac OS X, although I may have screwe
 ## Supported Rust Targets
 
 Rust x86_64-unknown-linux-gnu = Go linux amd64
+
+
+## A Brief Tutorial
+
+* Rust: Use `#[no_mangle] pub unsafe extern "C"` on functions you want to export.
+* Rust: Add `[lib] crate-type = ["lib", "staticlib"]` to `Cargo.toml`.
+* Copy the resulting shared library to a directory with Go code.
+* Go: Add `// #cgo LDFLAGS: ${SRCDIR}/libexamplerustlib_linux_amd64.a` to a .go file with the appropriate build tags.
