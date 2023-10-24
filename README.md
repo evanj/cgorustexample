@@ -8,4 +8,4 @@ This repository contains:
 * `gorustexe`:
 
 
-This should all build using `make` on Linux and Mac OS X, although I may have screwed stuff up.
+This should build using `make` on Linux and Mac OS X, although I may have screwed stuff up.
