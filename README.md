@@ -13,6 +13,7 @@ This should build using `make` on Linux and Mac OS X, although I may have screwe
 ## Supported Rust Targets
 
 Rust x86_64-unknown-linux-gnu = Go linux amd64
+Rust aarch64-apple-darwin = Go darwin arm64
 
 
 ## A Brief Tutorial
@@ -21,3 +22,5 @@ Rust x86_64-unknown-linux-gnu = Go linux amd64
 * Rust: Add `[lib] crate-type = ["lib", "staticlib"]` to `Cargo.toml`.
 * Copy the resulting shared library to a directory with Go code.
 * Go: Add `// #cgo LDFLAGS: ${SRCDIR}/libexamplerustlib_linux_amd64.a` to a .go file with the appropriate build tags.
+* Rust: Run `rustup target add (targets)` to configure for cross-compilation: https://rust-lang.github.io/rustup/cross-compilation.html
+* Rust: Run `cargo build --target=(target)` to cross-compile
