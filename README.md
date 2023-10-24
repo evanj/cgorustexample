@@ -9,3 +9,7 @@ This repository contains:
 
 
 This should build using `make` on Linux and Mac OS X, although I may have screwed stuff up.
+
+## Supported Rust Targets
+
+Rust x86_64-unknown-linux-gnu = Go linux amd64

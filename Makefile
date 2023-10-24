@@ -2,9 +2,9 @@ CC=clang
 CFLAGS:=-Wall -Wextra -Werror
 EXES:=crustexe/crustexe
 RUSTLIB:=examplerustlib/target/debug/libexamplerustlib.a
+GOLIBS:=gorustmodule/libexamplerustlib_linux_amd64.a
 
-
-all: $(EXES)
+all: $(EXES) $(GOLIBS)
 	cd examplerustlib && cargo test && cargo build
 	cd examplerustlib && cargo fmt
 	# https://github.com/rust-lang/rust-clippy/blob/master/README.md
@@ -19,7 +19,6 @@ all: $(EXES)
 		crustexe/crustexe.c
 	clang-format -i crustexe/crustexe.c
 
-
 crustexe/crustexe: crustexe/crustexe.c $(RUSTLIB)
 
 $(RUSTLIB): examplerustlib/src/*
@@ -32,6 +31,9 @@ $(RUSTLIB): examplerustlib/src/*
 		--allow clippy::missing-errors-doc
 
 	cd examplerustlib && cargo build
+
+gorustmodule/libexamplerustlib_linux_amd64.a: $(RUSTLIB)
+	cp $^ $@
 
 clean:
 	$(RM) $(EXES) $(RUSTLIB)
